@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="eclipse-language-client.commands.category"
+            name="サンプル・カテゴリー">
+      </category>
+      <command
+            categoryId="eclipse-language-client.commands.category"
+            name="send mannualy"
+            id="eclipse-language-client.commands.sendSaveEditHistoryRequestCommand">
+      </command>
+      <command
+            categoryId="eclipse-language-client.commands.category"
+            name="start automatic send"
+            id="eclipse-language-client.commands.startAutomaticSendCommand">
+      </command>
+      <command
+            categoryId="eclipse-language-client.commands.category"
+            name="stop automatic send"
+            id="eclipse-language-client.commands.stopAutomaticSendCommand">
+      </command>
+      <command
+            categoryId="eclipse-language-client.commands.category"
+            name="display latest 10 send history"
+            id="eclipse-language-client.commands.displaySendHistoryCommand">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="eclipselanguageclient.handlers.SendSaveEditHistoryRequestHandler"
+            commandId="eclipse-language-client.commands.sendSaveEditHistoryRequestCommand">
+      </handler>
+      <handler
+            class="eclipselanguageclient.handlers.autsend.StartAutomaticSendHandler"
+            commandId="eclipse-language-client.commands.startAutomaticSendCommand">
+      </handler>
+      <handler
+            class="eclipselanguageclient.handlers.autsend.StopAutomaticSendHandler"
+            commandId="eclipse-language-client.commands.stopAutomaticSendCommand">
+      </handler>
+      <handler
+            class="eclipselanguageclient.handlers.history.DisplayLatestTenSendHistoryHandler"
+            commandId="eclipse-language-client.commands.displaySendHistoryCommand">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
+         <menu
+               id="eclipse-language-client.menus.sairiAid"
+               label="SairiAid">
+            <command
+                  commandId="eclipse-language-client.commands.sendSaveEditHistoryRequestCommand"
+                  id="eclipse-language-client.menus.sendSaveEditHistoryRequestCommand">
+            </command>
+            <command
+                  commandId="eclipse-language-client.commands.startAutomaticSendCommand"
+                  id="eclipse-language-client.menus.startAutomaticSendCommand">
+            </command>
+            <command
+                  commandId="eclipse-language-client.commands.stopAutomaticSendCommand"
+                  id="eclipse-language-client.menus.stopAutomaticSendCommand">
+            </command>
+            <command
+                  commandId="eclipse-language-client.commands.displaySendHistoryCommand"
+                  id="eclipse-language-client.menus.displaySendHistoryCommand">
+            </command>
+         </menu>
+      </menuContribution>
+   </extension>
+   
+   <!-- Content type definition for the target file -->
+   <!-- Associate the content type with the Generic Editor -->
+   <!-- Setting target file extensions -->
+   <extension
+         point="org.eclipse.core.contenttype.contentTypes">
+      <content-type
+            base-type="org.eclipse.core.runtime.text"
+            file-extensions="java"
+            id="eclipse-language-client.java"
+            name="Java Language File"
+            priority="normal">
+      </content-type>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editorContentTypeBinding
+            contentTypeId="eclipse-language-client.java"
+            editorId="org.eclipse.ui.genericeditor.GenericEditor">
+      </editorContentTypeBinding>
+   </extension>
+   
+   <!-- LanguageServer definition and association with content type -->
+   <extension
+         point="org.eclipse.lsp4e.languageServer">
+      <server
+            class="eclipselanguageclient.client.SairiLanguageServer"
+            id="eclipse-language-client.sairilanguageserver"
+            label="Sairi Language Server"
+            clientImpl="eclipselanguageclient.client.SairiLanguageClient"
+            serverInterface="eclipselanguageclient.client.SairiLanguageServerInterface"
+            singleton="true">
+      </server>
+      <contentTypeMapping
+            contentType="eclipse-language-client.java"
+            id="eclipse-language-client.sairilanguageserver">
+      </contentTypeMapping>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            id="eclipse-language-client.views.category"
+            name="Sairi Extension">
+      </category>
+      <view
+            category="eclipse-language-client.views.category"
+            class="eclipselanguageclient.view.SendHistoryView"
+            id="eclipse-language-client.view.sendHistoryView"
+            name="Send History"
+            restorable="true">
+      </view>
+      <view
+            category="eclipse-language-client.views.category"
+            class="eclipselanguageclient.view.UserIdConfigrationView"
+            id="eclipse-language-client.view.userIdConfigrationView"
+            name="Sairi User Id Configration"
+            restorable="true">
+      </view>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.eclipse.jdt.ui.JavaPerspective">
+         <view
+               id="eclipse-language-client.view.sendHistoryView"
+               relationship="stack"
+               relative="org.eclipse.ui.views.ResourceNavigator"
+               visible="true">
+         </view>
+         <view
+               id="eclipse-language-client.view.userIdConfigrationView"
+               relationship="stack"
+               relative="org.eclipse.ui.views.ResourceNavigator"
+               visible="true">
+         </view>
+      </perspectiveExtension>
+   </extension>
+
+</plugin>
